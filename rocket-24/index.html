@@ -79,6 +79,11 @@ h1 span{color:var(--star)}
 .topbar{display:flex;align-items:center;gap:8px}
 .vault{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 4px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,210,255,.7)}
 .vault img{width:28px;height:28px;display:block;filter:drop-shadow(0 0 6px rgba(139,108,255,.5))}
+a.vault.dash{text-decoration:none;color:#dfe4ff;width:max-content;max-width:100%;min-height:40px;padding:5px 14px 5px 7px;border-radius:999px;background:rgba(0,0,0,.25);border:2px solid rgba(160,180,255,.3)}
+a.vault.dash::after{content:"\203A";font-size:20px;letter-spacing:0;line-height:1;margin-left:-2px}
+a.vault.dash:active{background:rgba(255,255,255,.12)}
+a.vault.dash:focus-visible{outline:3px solid var(--star);outline-offset:2px}
+.gamedash{margin:6px auto 0}
 .vault-sm{display:none;flex:none;width:30px;height:30px;filter:drop-shadow(0 0 6px rgba(139,108,255,.4))}
 @media (min-width:600px){.vault-sm{display:block}}
 .brand{flex:1;font-size:clamp(22px,5vw,30px);font-weight:900;white-space:nowrap}
@@ -306,7 +311,7 @@ h1 span{color:var(--star)}
 <!-- ============ SETUP ============ -->
 <section id="setup" class="screen">
   <div class="setup-card">
-    <div class="vault"><img src="data:image/png;base64,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" width="28" height="28" alt="">Turk's Puzzles</div>
+    <a class="vault dash" href="../"><img src="data:image/png;base64,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" width="28" height="28" alt="">All Turk's Puzzles</a>
     <div class="logo"><svg viewBox="0 0 120 220" aria-hidden="true"><use href="#rk"/></svg><h1>Rocket <span>24</span></h1></div>
     <p class="tag">Use all four numbers to make 24!</p>
     <h2>How many players?</h2>
@@ -376,9 +381,20 @@ h1 span{color:var(--star)}
       </div>
     </div>
   </main>
+  <a class="vault dash gamedash" href="../"><img src="data:image/png;base64,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" width="28" height="28" alt="">All Turk's Puzzles</a>
 </section>
 
 <!-- ============ OVERLAYS ============ -->
+<div class="overlay" id="leaveOv" hidden>
+  <div class="sheet">
+    <h2>Leave this game?</h2>
+    <p>You&rsquo;ll go to all of Turk&rsquo;s Puzzles and this game will end.</p>
+    <div class="btnrow">
+      <button class="big go" id="leaveStay">Keep playing</button>
+      <button class="big ghost" id="leaveGo">Leave</button>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="howOv" hidden>
   <div class="sheet howto">
     <h2>How to play</h2>
@@ -1194,7 +1210,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Core;
   $('keepBtn').addEventListener('click', function () { $('menuOv').hidden = true; });
   $('newBtn').addEventListener('click', function () { $('menuOv').hidden = true; S.running = false; $('game').hidden = true; $('setup').hidden = false; renderSetup(); });
 
-  function anyOverlay() { return ['howOv', 'passOv', 'skipOv', 'menuOv', 'winOv'].some(function (id) { return !$(id).hidden; }); }
+  function anyOverlay() { return ['howOv', 'passOv', 'skipOv', 'menuOv', 'winOv', 'leaveOv'].some(function (id) { return !$(id).hidden; }); }
 
   // ---------------- physical keyboard ----------------
   document.addEventListener('keydown', function (e) {
@@ -1203,7 +1219,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Core;
     if (!$('winOv').hidden && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); $('nextBtn').click(); return; }
     if (!$('passOv').hidden && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); $('readyBtn').click(); return; }
     if (!$('skipOv').hidden && e.key === 'Enter') { e.preventDefault(); $('skipNext').click(); return; }
-    if (anyOverlay()) { if (e.key === 'Escape') { $('howOv').hidden = true; $('menuOv').hidden = true; } return; }
+    if (anyOverlay()) { if (e.key === 'Escape') { $('howOv').hidden = true; $('menuOv').hidden = true; $('leaveOv').hidden = true; } return; }
     if ($('game').hidden) return;
     var k = e.key, map = { '*': '*', 'x': '*', 'X': '*', '\u00d7': '*', '/': '/', '\u00f7': '/', '+': '+', '-': '-', '\u2212': '-', '(': '(', ')': ')', '[': '(', ']': ')' };
     var cmd = null;
@@ -1219,6 +1235,17 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Core;
     if (btn) { btn.classList.add('pressed'); setTimeout(function () { btn.classList.remove('pressed'); }, 120); }
     pressKey(cmd);
   });
+
+  // ---------------- All Turk's Puzzles link (confirm if a game is going) ----------------
+  var leaveHref = null;
+  Array.prototype.forEach.call(document.querySelectorAll('a.vault.dash'), function (a) {
+    a.addEventListener('click', function (e) {
+      if ($('game').hidden) return;
+      e.preventDefault(); leaveHref = a.href; $('leaveOv').hidden = false; $('leaveStay').focus();
+    });
+  });
+  $('leaveStay').addEventListener('click', function () { $('leaveOv').hidden = true; leaveHref = null; });
+  $('leaveGo').addEventListener('click', function () { var h = leaveHref; $('leaveOv').hidden = true; if (h) { S.running = false; location.href = h; } });
 
   // ---------------- boot ----------------
   renderSetup();
