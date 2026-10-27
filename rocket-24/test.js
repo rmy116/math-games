@@ -1,4 +1,4 @@
-// Rocket 24 logic tests. Run from the repo root: node 24/test.js
+// Rocket 24 logic tests. Run from the repo root: node rocket-24/test.js
 // Pulls the <script id="core"> block straight out of index.html next to this file, so it tests exactly what ships.
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
