@@ -72,6 +72,14 @@ input.good{border-color:var(--ok);background:var(--okbg)}
 input.bad{border-color:var(--bad);background:var(--badbg)}
 input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 .hint{color:var(--red);font-weight:800;font-size:15px;margin:-2px 0 10px 6px}
+.acts{display:flex;gap:10px;align-items:stretch}.acts #bCheck{flex:1;min-width:0}
+.hbtn{flex:none;width:118px;display:flex;align-items:center;justify-content:center;gap:5px;border:0;border-radius:999px;font:inherit;font-size:19px;font-weight:900;padding:0 10px;cursor:pointer;color:#5a3b00;background:var(--gold);box-shadow:0 5px 0 #d9a21c;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .08s;white-space:nowrap}
+.hbtn svg{width:22px;height:22px;flex:none}
+.hbtn:active{transform:translateY(4px);box-shadow:0 1px 0 #d9a21c}
+.hbtn:disabled{background:#eef2fa;color:#8a94b8;box-shadow:0 5px 0 var(--line);cursor:default;transform:none;font-size:16px}
+.hbtn:disabled svg{display:none}
+.hbtn:focus-visible{outline:4px solid var(--blue);outline-offset:3px}
+.hintsum{color:var(--muted);font-size:18px;font-weight:900;margin:0 0 10px}
 .fb{border-radius:20px;padding:12px 14px;margin-bottom:14px;font-size:17px;line-height:1.35;text-align:center}
 .fb.ok{background:var(--okbg);color:var(--ok);border:3px solid #a9e6c3}
 .fb.no{background:#fff4e5;color:#c2410c;border:3px solid #ffd29a}
@@ -113,7 +121,7 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 @media (max-width:360px){
   .hrow{gap:7px}.hrow img{width:32px;height:32px}.htitle{font-size:17px}.hsub{font-size:12px}
   .hprog{font-size:13px;padding:5px 8px}.mute{width:32px;height:32px}.mute svg{width:18px;height:18px}.hright{gap:5px}
-  .pair .ab{width:84px}input{font-size:19px;padding:9px 12px}.card{padding:14px;border-radius:24px}
+  .pair .ab{width:84px}.hbtn{width:100px;font-size:17px}.hbtn:disabled{font-size:14px}.acts{gap:8px}input{font-size:19px;padding:9px 12px}.card{padding:14px;border-radius:24px}
   main{padding:12px 12px calc(20px + env(safe-area-inset-bottom))}.start h1{font-size:34px}.verdict{font-size:46px}
 }
 @media (max-height:700px) and (max-width:699px){
@@ -168,7 +176,7 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
         </div>
         <div class="hint hidden" id="hint">Fill in the state, capital, and abbreviation.</div>
         <div class="fb hidden" id="fb" role="status"></div>
-        <button class="btn navy" type="submit" id="bCheck">Check</button>
+        <div class="acts"><button class="hbtn" type="button" id="bHint" aria-label="Hint: show the first letter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6.5 6.5 0 0 0-3.9 11.7c.6.5.9 1.2.9 2V16h6v-.3c0-.8.3-1.5.9-2A6.5 6.5 0 0 0 12 2.5z" fill="#fff3c4"/></svg><span id="hintTxt">Hint</span></button><button class="btn navy" type="submit" id="bCheck">Check</button></div>
         <button class="btn hidden" type="button" id="bNext">Next</button>
       </form>
     </div>
@@ -178,6 +186,7 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
     <div class="stars" id="sStars">★ ★ ★</div>
     <div class="verdict" id="verdict">PASSED</div>
     <div class="score" id="score">10/10</div>
+    <div class="hintsum" id="hintsUsed">Hints used: 0</div>
     <div class="sumnote" id="sumnote"></div>
     <div class="misses hidden" id="misses"></div>
     <button class="btn" id="bAgain">Try again</button>
@@ -242,6 +251,12 @@ function norm(s) {
   return String(s == null ? "" : s).toLowerCase().replace(/[\u2018\u2019]/g, "'").replace(/\./g, " ")
     .replace(/\s+/g, " ").trim().replace(/\bsaint\b/g, "st");
 }
+// Hint: the first letter of one answer box ("name", "capital" or "abbr"), as written in the data.
+function hintLetter(st, field) {
+  var v = field === "name" ? st.name : field === "capital" ? st.capital : field === "abbr" ? st.abbr : null;
+  if (v == null) throw new Error("bad field");
+  return v.charAt(0);
+}
 function grade(st, name, cap, abbr) {
   var nameOk = norm(name) !== "" && norm(name) === norm(st.name);
   var capOk = norm(cap) !== "" && norm(cap) === norm(st.capital);
@@ -249,12 +264,12 @@ function grade(st, name, cap, abbr) {
   return { nameOk: nameOk, capOk: capOk, abbrOk: abOk, ok: nameOk && capOk && abOk };
 }
 var core = { STATES: STATES, QUIZZES: QUIZZES, cutoff: cutoff, quizLabel: quizLabel, activeQuiz: activeQuiz,
-  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade };
+  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade, hintLetter: hintLetter };
 /*CORE-END*/
 var $ = function(id){ return document.getElementById(id); };
 var now = parseDateParam(location.search) || new Date();
 var act = activeQuiz(now), Q = act.quiz;
-var S = { phase: "start", order: [], i: 0, results: [] };
+var S = { phase: "start", order: [], i: 0, results: [], hints: 0, hintUsed: false, lastBox: null };
 var label = "Quiz " + Q.no + " \u00b7 " + quizLabel(Q);
 $("hsub").textContent = label; $("startQuiz").textContent = label;
 $("startRange").textContent = "States " + Q.states[0] + "\u2013" + Q.states[4];
@@ -375,7 +390,7 @@ var CHEERS = ["Awesome!", "You got it!", "Star power!", "Nailed it!", "Way to go
 function show(id){ ["sStart","sPlay","sSum"].forEach(function(s){ $(s).classList.toggle("hidden", s !== id); }); }
 function start(){
   SND.unlock(); FX.skip();
-  S.order = buildOrder(Q.states); S.i = 0; S.results = [];
+  S.order = buildOrder(Q.states); S.i = 0; S.results = []; S.hints = 0;
   show("sPlay"); $("hprog").classList.remove("hidden"); prompt(); window.scrollTo(0,0);
 }
 function prompt(){
@@ -387,6 +402,7 @@ function prompt(){
   [nm, cap, ab].forEach(function(el){ el.value = ""; el.disabled = false; el.classList.remove("good","bad"); });
   $("fb").classList.add("hidden"); $("hint").classList.add("hidden");
   $("bCheck").classList.remove("hidden"); $("bNext").classList.add("hidden");
+  S.hintUsed = false; S.lastBox = null; paintHint(); $("bHint").classList.remove("hidden");
   nm.focus();
 }
 function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -400,7 +416,7 @@ function check(){
   S.results.push({ n: st.n, name: nm.value.trim().replace(/\s+/g, " "), cap: cap.value.trim().replace(/\s+/g, " "), abbr: ab.value.trim().toUpperCase(), nameOk: g.nameOk, capOk: g.capOk, abbrOk: g.abbrOk, ok: g.ok });
   nm.classList.add(g.nameOk ? "good" : "bad"); cap.classList.add(g.capOk ? "good" : "bad"); ab.classList.add(g.abbrOk ? "good" : "bad");
   nm.disabled = true; cap.disabled = true; ab.disabled = true;
-  $("hint").classList.add("hidden"); $("bCheck").classList.add("hidden");
+  $("hint").classList.add("hidden"); $("bCheck").classList.add("hidden"); $("bHint").classList.add("hidden");
   $("barFill").style.width = ((S.i + 1) / S.order.length * 100) + "%";
   var fb = $("fb");
   fb.className = "fb hidden " + (g.ok ? "ok" : "no");
@@ -433,6 +449,7 @@ function summary(){
   var v = $("verdict"); v.textContent = pass ? "PASSED" : "FAILED"; v.className = "verdict " + (pass ? "pass" : "fail");
   $("sStars").textContent = pass ? "\u2605 \u2605 \u2605" : "\u2605";
   $("score").textContent = right + "/" + total;
+  $("hintsUsed").textContent = "Hints used: " + S.hints;
   $("sumnote").textContent = pass ? "Every answer right, both times. Great job!" : "To pass, every answer has to be right both times. Here's what to practice:";
   var m = $("misses");
   if (pass) { m.classList.add("hidden"); m.innerHTML = ""; }
@@ -451,6 +468,28 @@ function summary(){
   show("sSum"); window.scrollTo(0,0);
   if (pass) FX.play({ big: true }, function(){});
 }
+/* ---------- hint: first letter of the box the player is in, once per prompt ---------- */
+var BOXES = { sname: "name", cap: "capital", abbr: "abbr" };
+function paintHint(){ var b = $("bHint"); b.disabled = S.hintUsed; $("hintTxt").textContent = S.hintUsed ? "Hint used" : "Hint"; b.setAttribute("aria-label", S.hintUsed ? "Hint used" : "Hint: show the first letter"); }
+["sname", "cap", "abbr"].forEach(function(id){ $(id).addEventListener("focus", function(){ if (S.phase === "prompt") S.lastBox = id; }); });
+function hintBox(){
+  var a = document.activeElement && document.activeElement.id;
+  if (BOXES[a]) return a;
+  if (S.lastBox) return S.lastBox;
+  var ids = ["sname", "cap", "abbr"]; for (var k = 0; k < ids.length; k++) if (!$(ids[k]).value.trim()) return ids[k];
+  return "sname";
+}
+function useHint(){
+  if (S.phase !== "prompt" || S.hintUsed) return;
+  var id = hintBox(), el = $(id), st = stateByNum(S.order[S.i]);
+  el.value = hintLetter(st, BOXES[id]);
+  S.hintUsed = true; S.hints++; paintHint();
+  el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {}
+}
+// Keep the keyboard and the current box: pressing Hint must not move focus off the answer box.
+$("bHint").addEventListener("pointerdown", function(e){ e.preventDefault(); });
+$("bHint").addEventListener("mousedown", function(e){ e.preventDefault(); });
+$("bHint").addEventListener("click", useHint);
 $("bStart").addEventListener("click", start);
 $("bAgain").addEventListener("click", start);
 $("bNext").addEventListener("click", next);
@@ -467,7 +506,7 @@ document.addEventListener("keydown", function(e){
   if (S.phase === "prompt" && t === $("abbr")) { e.preventDefault(); check(); return; }
   if (S.phase === "feedback") { e.preventDefault(); next(); return; }
 });
-window.StatesQuiz = { core: core, state: S, quiz: Q, finished: act.finished, now: now, start: start, fx: FX, sound: SND };
+window.StatesQuiz = { core: core, state: S, hint: useHint, quiz: Q, finished: act.finished, now: now, start: start, fx: FX, sound: SND };
 })();
 </script>
 </body>
