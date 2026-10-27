@@ -47,15 +47,16 @@ main{max-width:620px;margin:0 auto;padding:16px 16px calc(24px + env(safe-area-i
 .btn:disabled{opacity:.45;cursor:default}
 .btn:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 /* prompt */
-.num{background:var(--navy);color:#fff;border-radius:18px;text-align:center;padding:10px 10px 14px;position:relative;overflow:hidden;margin-bottom:16px}
+.num{background:var(--navy);color:#fff;border-radius:18px;text-align:center;padding:8px 10px 14px;position:relative;overflow:hidden;margin-bottom:14px}
 .num::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,var(--red) 0 20px,#fff 20px 40px)}
 .num small{display:block;font-size:14px;font-weight:700;color:#c9d4ea;letter-spacing:2px;text-transform:uppercase}
-.num b{display:block;font-size:104px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+.num b{display:block;font-size:88px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px}
 label{display:block;font-weight:800;font-size:16px;color:var(--navy);margin:0 0 6px 2px}
-.field{margin-bottom:14px}
-input{width:100%;font:inherit;font-size:22px;font-weight:600;padding:13px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+.field{margin-bottom:12px}
+input{width:100%;font:inherit;font-size:21px;font-weight:600;padding:11px 13px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
 input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,91,191,.18)}
-#abbr{text-transform:uppercase;letter-spacing:3px;max-width:150px}
+#abbr{text-transform:uppercase;letter-spacing:3px;text-align:center}
+.pair{display:flex;gap:10px}.pair .grow{flex:1;min-width:0}.pair .ab{flex:none;width:104px}
 input.good{border-color:var(--ok);background:var(--okbg)}
 input.bad{border-color:var(--bad);background:var(--badbg)}
 input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
@@ -92,7 +93,8 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
   .start h1{font-size:48px}
   .verdict{font-size:68px}
 }
-@media (max-height:700px) and (max-width:699px){.num b{font-size:84px}.start{padding:18px 14px}.rules{margin:12px auto 16px}}
+@media (max-width:360px){.pair .ab{width:88px}input{font-size:19px;padding:10px 11px}.card{padding:14px}main{padding:12px 12px calc(20px + env(safe-area-inset-bottom))}}
+@media (max-height:700px) and (max-width:699px){.num b{font-size:64px}.num small{font-size:12px}label{font-size:15px;margin-bottom:4px}.field{margin-bottom:10px}.btn{padding:13px;font-size:19px}.bar{margin-bottom:10px}.start{padding:18px 14px}.rules{margin:12px auto 16px}}
 </style>
 </head>
 <body>
@@ -113,7 +115,7 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
     <p class="range" id="startRange">States</p>
     <ul class="rules">
       <li>You'll see a state number.</li>
-      <li>Type its capital and its abbreviation.</li>
+      <li>Type the state name, capital, and abbreviation.</li>
       <li>Each number comes up twice, in random order.</li>
       <li>Get all 10 right to pass!</li>
     </ul>
@@ -126,11 +128,15 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
     <div class="card">
       <div class="num"><small>State number</small><b id="pNum">17</b></div>
       <form id="form" autocomplete="off" novalidate>
-        <div class="field"><label for="cap">Capital</label>
-          <input id="cap" type="text" autocapitalize="words" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="next" inputmode="text"></div>
-        <div class="field"><label for="abbr">Abbreviation</label>
-          <input id="abbr" type="text" autocapitalize="characters" autocorrect="off" autocomplete="off" spellcheck="false" maxlength="2" enterkeyhint="done" inputmode="text"></div>
-        <div class="hint hidden" id="hint">Type both the capital and the abbreviation.</div>
+        <div class="field"><label for="sname">State</label>
+          <input id="sname" type="text" autocapitalize="words" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="next" inputmode="text"></div>
+        <div class="pair">
+          <div class="field grow"><label for="cap">Capital</label>
+            <input id="cap" type="text" autocapitalize="words" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="next" inputmode="text"></div>
+          <div class="field ab"><label for="abbr">Abbrev.</label>
+            <input id="abbr" type="text" autocapitalize="characters" autocorrect="off" autocomplete="off" spellcheck="false" maxlength="2" enterkeyhint="done" inputmode="text" aria-label="Abbreviation"></div>
+        </div>
+        <div class="hint hidden" id="hint">Fill in the state, capital, and abbreviation.</div>
         <div class="fb hidden" id="fb"></div>
         <button class="btn navy" type="submit" id="bCheck">Check</button>
         <button class="btn hidden" type="button" id="bNext">Next</button>
@@ -205,10 +211,11 @@ function norm(s) {
   return String(s == null ? "" : s).toLowerCase().replace(/[\u2018\u2019]/g, "'").replace(/\./g, " ")
     .replace(/\s+/g, " ").trim().replace(/\bsaint\b/g, "st");
 }
-function grade(st, cap, abbr) {
+function grade(st, name, cap, abbr) {
+  var nameOk = norm(name) !== "" && norm(name) === norm(st.name);
   var capOk = norm(cap) !== "" && norm(cap) === norm(st.capital);
   var abOk = norm(abbr).replace(/ /g, "") === st.abbr.toLowerCase();
-  return { capOk: capOk, abbrOk: abOk, ok: capOk && abOk };
+  return { nameOk: nameOk, capOk: capOk, abbrOk: abOk, ok: nameOk && capOk && abOk };
 }
 var core = { STATES: STATES, QUIZZES: QUIZZES, cutoff: cutoff, quizLabel: quizLabel, activeQuiz: activeQuiz,
   parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade };
@@ -229,27 +236,28 @@ function start(){
 }
 function prompt(){
   S.phase = "prompt";
-  var cap = $("cap"), ab = $("abbr");
+  var nm = $("sname"), cap = $("cap"), ab = $("abbr");
   $("pNum").textContent = S.order[S.i];
   $("hprog").textContent = (S.i + 1) + " of " + S.order.length;
   $("barFill").style.width = (S.i / S.order.length * 100) + "%";
-  [cap, ab].forEach(function(el){ el.value = ""; el.disabled = false; el.classList.remove("good","bad"); });
+  [nm, cap, ab].forEach(function(el){ el.value = ""; el.disabled = false; el.classList.remove("good","bad"); });
   $("fb").classList.add("hidden"); $("hint").classList.add("hidden");
   $("bCheck").classList.remove("hidden"); $("bNext").classList.add("hidden");
-  cap.focus();
+  nm.focus();
 }
 function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
 function check(){
   if (S.phase !== "prompt") return;
-  var cap = $("cap"), ab = $("abbr");
-  if (!cap.value.trim() || !ab.value.trim()) { $("hint").classList.remove("hidden"); (cap.value.trim() ? ab : cap).focus(); return; }
-  var st = stateByNum(S.order[S.i]), g = grade(st, cap.value, ab.value);
-  S.results.push({ n: st.n, cap: cap.value.trim(), abbr: ab.value.trim().toUpperCase(), capOk: g.capOk, abbrOk: g.abbrOk, ok: g.ok });
-  cap.classList.add(g.capOk ? "good" : "bad"); ab.classList.add(g.abbrOk ? "good" : "bad");
-  cap.disabled = true; ab.disabled = true;
+  var nm = $("sname"), cap = $("cap"), ab = $("abbr");
+  var empty = [nm, cap, ab].filter(function(el){ return !el.value.trim(); });
+  if (empty.length) { $("hint").classList.remove("hidden"); empty[0].focus(); return; }
+  var st = stateByNum(S.order[S.i]), g = grade(st, nm.value, cap.value, ab.value);
+  S.results.push({ n: st.n, name: nm.value.trim().replace(/\s+/g, " "), cap: cap.value.trim().replace(/\s+/g, " "), abbr: ab.value.trim().toUpperCase(), nameOk: g.nameOk, capOk: g.capOk, abbrOk: g.abbrOk, ok: g.ok });
+  nm.classList.add(g.nameOk ? "good" : "bad"); cap.classList.add(g.capOk ? "good" : "bad"); ab.classList.add(g.abbrOk ? "good" : "bad");
+  nm.disabled = true; cap.disabled = true; ab.disabled = true;
   var fb = $("fb");
   fb.className = "fb " + (g.ok ? "ok" : "no");
-  fb.innerHTML = g.ok ? '<span class="big">\u2713 Correct!</span><span class="ans">' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>'
+  fb.innerHTML = g.ok ? '<span class="big">\u2713 Correct!</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>'
     : '<span class="big">\u2717 Not quite</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>';
   $("hint").classList.add("hidden");
   $("bCheck").classList.add("hidden");
@@ -279,7 +287,7 @@ function summary(){
           : '<div class="row"><span class="k">' + k + ':</span> you typed <span class="typed">' + esc(typed || "(blank)") + '</span> \u2192 <span class="right">' + esc(correct) + '</span></div>';
       }
       return '<div class="miss"><div class="who"><span>' + r.n + '</span>' + esc(st.name) + '</div>' +
-        row("Capital", r.capOk, r.cap, st.capital) + row("Abbreviation", r.abbrOk, r.abbr, st.abbr) + '</div>';
+        row("State", r.nameOk, r.name, st.name) + row("Capital", r.capOk, r.cap, st.capital) + row("Abbreviation", r.abbrOk, r.abbr, st.abbr) + '</div>';
     }).join("");
     m.classList.remove("hidden");
   }
@@ -293,6 +301,7 @@ $("abbr").addEventListener("input", function(){ var el = this, v = el.value.repl
 document.addEventListener("keydown", function(e){
   if (e.key !== "Enter" || e.isComposing) return;
   var t = e.target;
+  if (S.phase === "prompt" && t === $("sname")) { e.preventDefault(); $("cap").focus(); return; }
   if (S.phase === "prompt" && t === $("cap")) { e.preventDefault(); $("abbr").focus(); return; }
   if (S.phase === "prompt" && t === $("abbr")) { e.preventDefault(); check(); return; }
   if (S.phase === "feedback") { e.preventDefault(); next(); return; }
