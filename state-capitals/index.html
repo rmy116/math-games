@@ -84,6 +84,7 @@ input:focus{outline:none;border-color:var(--sky);background:#fff;box-shadow:0 0 
 .pair{display:flex;gap:10px}.pair .grow{flex:1;min-width:0}.pair .ab{flex:none;width:104px}
 input.good{border-color:var(--ok);background:var(--okbg)}
 input.bad{border-color:var(--bad);background:var(--badbg)}
+input.near{border-color:#e0a100;background:#fff6d6}
 input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 .hint{color:var(--red);font-weight:800;font-size:15px;margin:-2px 0 10px 6px}
 .acts{display:flex;gap:10px;align-items:stretch}.acts #bCheck{flex:1;min-width:0}
@@ -100,6 +101,8 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 .fb .big{font-size:24px;font-weight:900;display:block;margin-bottom:2px}
 .fb .ans{color:var(--ink);font-weight:700}
 .fb .ans b{color:var(--blue);font-weight:900}
+.fb .spell{display:block;margin-top:6px;color:#7a5200;font-weight:800;font-size:16px;overflow-wrap:anywhere}
+.fb .spell b{color:#5a3b00;font-weight:900}
 .fb.pop{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
 @keyframes pop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
 .wiggle{animation:wiggle .5s ease-in-out}
@@ -122,6 +125,12 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
 .miss .typed{color:var(--bad);text-decoration:line-through;font-weight:800}
 .miss .right{color:var(--ok);font-weight:900}
 .miss .row.okrow{color:var(--muted)}
+.spelling{text-align:left;margin:4px 0 20px}
+.spelling h2{font-size:19px;font-weight:900;color:#7a5200;margin-bottom:8px}
+.spelling .sp{border:3px solid #f3d47a;border-radius:18px;padding:9px 12px;margin-bottom:8px;background:#fffaeb;font-size:16px;line-height:1.4;font-weight:600;overflow-wrap:anywhere}
+.spelling .sp .k{font-weight:800;color:var(--muted)}
+.spelling .sp .tw{color:#a15c00;font-weight:800}
+.spelling .sp .right{color:var(--ok);font-weight:900}
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
 @media (min-width:700px){
   .htitle{font-size:26px}.hsub{font-size:16px}.hrow img{width:40px;height:40px}
@@ -238,6 +247,7 @@ a.brand.dash:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
     <div class="hintsum" id="hintsUsed">Hints used: 0</div>
     <div class="sumnote" id="sumnote"></div>
     <div class="misses hidden" id="misses"></div>
+    <div class="spelling hidden" id="spelling"></div>
     <button class="btn" id="bAgain">Try again</button>
     <a class="brand dash" href="../"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAADAFBMVEVHcEwhUcI6d+w7eO0hUsMrYNUhUsM0ads4ceM6d+0hU8QiUsQhU8QjU8E6d+wiU8Q7ee48ee4/e+8hUsMoV8U7d+06ee07ee4qR7hAgOYjVcc2YshMg+4hUsI5dek9evA3cuc3dOk9e/E3cuY5d+s3cuY3cub///8WFhw5dekiVMU4dOg7eO0hUsI2ceUgUcE3c+c3cuY1b+M8eu8vZ9ooXM40buI8ee4sYtUya98zbOAgUMAkV8gmWcolWMkqX9E5derg4OEjVcU4dOkjVcY6dus6d+smWssiU8M6d+w7d+whU8M7eOwkVsctZNcoXc8xat00beExadwhUsMuZtknW8w4c+c2ceQ3cuU2cOQ1cOQ7ee4hUcEiVMQ5duo6duoiU8QuZdgrYNIrYdM9eu8waNsfUMA1b+ItY9YpXtA9e/AfT78mWcslWMooXc77+voyat0iU8IgTrbNzc4kVsbQ0NI0buEwaNozbeAwadwnW83z8/Pw8PFKarNMg+wsY9UtLTLf3+Dl5ea5ubp4nuwsYdNIfeYpXs+Dg4YqYNKIiIs1YcY4ZcqxsbPk5OVzc3ckJCmbm54uZdc7atBPhvD5+vo5Z80nJyxwcHNbW2D4+PhbhdtUVFlAcNdEd99LgelHeuI9btWioqT9/f4gICVukdodHSMrKzFCc9svLzVWfdHn7PhVesqYmJsjU7tvlOBGRktMgOg/P0UZGR8pW8NKf+hoi9XFxcY3Y8p4eHsVFRz8/Pzz9v0pXszg5/Vlhs9OhvBfiuAmWMAoVrcmWcbb29yDnNLq6uqXrNnv8/tiYmZEeeNmiNJRftolUK90muYrYdJqam6dteY/ZrnX3/G9vb+rq623y/Syx/MpXMc2Nju1tbdNTVKwsLJej+w2bNirwe1XV1skVcBmg8IjUbTJyco7O0HP2e1Fc9WMpdlSUlbPz9DI0eZxcXWEhIfX19jt8fg/duM3Ybt8fIGSkpT/453/2HRFb8je3t//78j/8MtzYLo7fADvAEkAHpRHcEzmID7VAAABAHRSTlMAS476+hzMESm18bTjMViLSfHOclxyNugGBvy1jpj44NrL1Obe8+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AS++S7QAACLxJREFUeNrtm3lYFOcZwD9uuSSAd+702G1N0xBNWpMINUdJW2OOJtGkJWmUNNEmHBpzQdFKwQ2RgMFVWCBBl0NcWFd3E0v3oLDLtQa5T7lFUOOVs8dfnR1nd2bn+2Z2xhlmn6dPf3/A++6+M+9v55ud69kPAARB832D71gcuUU0Im+N8l24CHAjYGFUYuKWRJFZga3xVt95ntsvCk5cMXckBt/A3n5e8Iq5ZcuKYJatsNTXb9++nxHMWeR301Kmjx+Flf3DtcBcRYn7ogKQ/W+I/J1EbFmM+kLM97tTOvzgfXH+nZLiN5++/f3WSgttG8yL/LXURFK/jkujfiU93w8iBXx/6Q2CyQHwe9QLvPSoa0cMzsh4iUDSaDExCItezMh4kUDa6CZiA/zCW9yCH5MDfuQ9fB0CC70ocItjL7j9Yf5kjI1lPCwCyxdi13/L+TI2aJIlJ8tMA2PLBXM7dhbiucjaQbVShqM0DmQLNggCvs/x4lOLSuZCpcl4TiDzQfDdfFhrUcooKDXZdwvDF9yG/f3kE2fuKZpQydxQDXBfFhkFg+/FxMQc+zSGwEM0ppbRMHZwXRYd3QZ+EMODCSVdIHkgRhA/BBt4sF4jgzCt3yAIcBcPvpQhOHaXIPgIbDiG6J/cIFBgPQ/akQLrBQGe50EpagjKnhcEeIEH46idcPwFQYB7eLCqW0Xvr5xIuUcQuEB2tjNlj8qKjXQB9Wdl3JZlisCrGNnZrxJ4iM7RN4Fq4hzXZRkicB8fUvb3up+MLAUp9wkDKfBlx18Z6Gg2UUZBrTzPXHmSo8BbMBs0LWuYaEmjboE05sJdV0++xQXwFEyDSi9nZGb0hItcHXOdfNfRp7gA3oFpSJN/SPmYezOpo76T2mTnLspb2w64Cfzl6DtcYBJQffcfiQTuh8G3wLf/FixwPxcQAikOgeTvvpVQoKzMmeKRWPsA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" alt="">All Turk's Puzzles</a>
   </section>
@@ -316,14 +326,41 @@ function studyList(q) {
     var st = stateByNum(n); return { n: st.n, name: st.name, capital: st.capital, abbr: st.abbr };
   });
 }
+// Damerau-Levenshtein distance (optimal string alignment): insert, delete, substitute, or swap two neighbors.
+function editDist(a, b) {
+  var m = a.length, n = b.length, d = [], i, j;
+  for (i = 0; i <= m; i++) { d[i] = [i]; }
+  for (j = 0; j <= n; j++) d[0][j] = j;
+  for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) {
+    var c = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+    if (i > 1 && j > 1 && a.charAt(i - 1) === b.charAt(j - 2) && a.charAt(i - 2) === b.charAt(j - 1)) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+  }
+  return d[m][n];
+}
+// Spelling forgiveness: answers this short (after norm) must be exact, e.g. Ohio, Iowa, Utah.
+var NEAR_MIN = 5;
+var ANSWERS = []; STATES.forEach(function (s) { ANSWERS.push(norm(s.name), norm(s.capital)); });
+// A near miss: exactly 1 edit from the right answer, and not equal to or 1 edit from ANY other
+// state name or capital, so a typo can never land on a different answer.
+function nearMiss(typed, correct) {
+  var t = norm(typed), c = norm(correct);
+  if (!t || t === c || c.length < NEAR_MIN || editDist(t, c) !== 1) return false;
+  for (var i = 0; i < ANSWERS.length; i++) { var o = ANSWERS[i]; if (o !== c && editDist(t, o) <= 1) return false; }
+  return true;
+}
+// nameOk / capOk are true for exact answers AND near misses (they count as right); nameNear / capNear flag the near misses.
 function grade(st, name, cap, abbr) {
-  var nameOk = norm(name) !== "" && norm(name) === norm(st.name);
-  var capOk = norm(cap) !== "" && norm(cap) === norm(st.capital);
+  var nameExact = norm(name) !== "" && norm(name) === norm(st.name);
+  var capExact = norm(cap) !== "" && norm(cap) === norm(st.capital);
+  var nameNear = !nameExact && nearMiss(name, st.name);
+  var capNear = !capExact && nearMiss(cap, st.capital);
   var abOk = norm(abbr).replace(/ /g, "") === st.abbr.toLowerCase();
-  return { nameOk: nameOk, capOk: capOk, abbrOk: abOk, ok: nameOk && capOk && abOk };
+  var nameOk = nameExact || nameNear, capOk = capExact || capNear;
+  return { nameOk: nameOk, capOk: capOk, abbrOk: abOk, nameNear: nameNear, capNear: capNear, ok: nameOk && capOk && abOk };
 }
 var core = { STATES: STATES, QUIZZES: QUIZZES, cutoff: cutoff, quizLabel: quizLabel, activeQuiz: activeQuiz,
-  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade, hintLetter: hintLetter, studyList: studyList };
+  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade, editDist: editDist, nearMiss: nearMiss, NEAR_MIN: NEAR_MIN, hintLetter: hintLetter, studyList: studyList };
 /*CORE-END*/
 var $ = function(id){ return document.getElementById(id); };
 var now = parseDateParam(location.search) || new Date();
@@ -458,7 +495,7 @@ function prompt(){
   $("pNum").textContent = S.order[S.i];
   $("hprog").textContent = (S.i + 1) + " of " + S.order.length;
   $("barFill").style.width = (S.i / S.order.length * 100) + "%";
-  [nm, cap, ab].forEach(function(el){ el.value = ""; el.disabled = false; el.classList.remove("good","bad"); });
+  [nm, cap, ab].forEach(function(el){ el.value = ""; el.disabled = false; el.classList.remove("good","bad","near"); });
   $("fb").classList.add("hidden"); $("hint").classList.add("hidden");
   $("bCheck").classList.remove("hidden"); $("bNext").classList.add("hidden");
   S.hintUsed = false; S.lastBox = null; paintHint(); $("bHint").classList.remove("hidden");
@@ -472,15 +509,17 @@ function check(){
   var empty = [nm, cap, ab].filter(function(el){ return !el.value.trim(); });
   if (empty.length) { $("hint").classList.remove("hidden"); empty[0].focus(); return; }
   var st = stateByNum(S.order[S.i]), g = grade(st, nm.value, cap.value, ab.value);
-  S.results.push({ n: st.n, name: nm.value.trim().replace(/\s+/g, " "), cap: cap.value.trim().replace(/\s+/g, " "), abbr: ab.value.trim().toUpperCase(), nameOk: g.nameOk, capOk: g.capOk, abbrOk: g.abbrOk, ok: g.ok });
-  nm.classList.add(g.nameOk ? "good" : "bad"); cap.classList.add(g.capOk ? "good" : "bad"); ab.classList.add(g.abbrOk ? "good" : "bad");
+  S.results.push({ n: st.n, name: nm.value.trim().replace(/\s+/g, " "), cap: cap.value.trim().replace(/\s+/g, " "), abbr: ab.value.trim().toUpperCase(), nameOk: g.nameOk, capOk: g.capOk, abbrOk: g.abbrOk, nameNear: g.nameNear, capNear: g.capNear, ok: g.ok });
+  nm.classList.add(g.nameNear ? "near" : g.nameOk ? "good" : "bad"); cap.classList.add(g.capNear ? "near" : g.capOk ? "good" : "bad"); ab.classList.add(g.abbrOk ? "good" : "bad");
   nm.disabled = true; cap.disabled = true; ab.disabled = true;
   $("hint").classList.add("hidden"); $("bCheck").classList.add("hidden"); $("bHint").classList.add("hidden");
   $("barFill").style.width = ((S.i + 1) / S.order.length * 100) + "%";
   var fb = $("fb");
   fb.className = "fb hidden " + (g.ok ? "ok" : "no");
-  fb.innerHTML = g.ok ? '<span class="big">\u2605 ' + CHEERS[Math.floor(Math.random() * CHEERS.length)] + ' \u2605</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>'
-    : '<span class="big">So close, try the next one!</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>';
+  var spell = (g.nameNear ? '<span class="spell">\u270F\uFE0F Watch the spelling: <b>' + esc(st.name) + '</b></span>' : '') +
+    (g.capNear ? '<span class="spell">\u270F\uFE0F Watch the spelling: <b>' + esc(st.capital) + '</b></span>' : '');
+  fb.innerHTML = g.ok ? '<span class="big">\u2605 ' + CHEERS[Math.floor(Math.random() * CHEERS.length)] + ' \u2605</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>' + spell
+    : '<span class="big">So close, try the next one!</span><span class="ans">' + st.n + ' is ' + esc(st.name) + ': <b>' + esc(st.capital) + ', ' + st.abbr + '</b></span>' + spell;
   if (g.ok) {
     S.phase = "celebrate";
     if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
@@ -523,6 +562,19 @@ function summary(){
         row("State", r.nameOk, r.name, st.name) + row("Capital", r.capOk, r.cap, st.capital) + row("Abbreviation", r.abbrOk, r.abbr, st.abbr) + '</div>';
     }).join("");
     m.classList.remove("hidden");
+  }
+  var sp = [];
+  S.results.forEach(function(r){ var st = stateByNum(r.n);
+    if (r.nameNear) sp.push({ n: r.n, k: "State", typed: r.name, correct: st.name });
+    if (r.capNear) sp.push({ n: r.n, k: "Capital", typed: r.cap, correct: st.capital });
+  });
+  var spl = $("spelling");
+  if (!sp.length) { spl.classList.add("hidden"); spl.innerHTML = ""; }
+  else {
+    spl.innerHTML = '<h2>\u270F\uFE0F Spelling to watch (' + sp.length + ')</h2>' + sp.map(function(x){
+      return '<div class="sp"><span class="k">' + x.n + ' ' + x.k + ':</span> you typed <span class="tw">' + esc(x.typed) + '</span> \u2192 <span class="right">' + esc(x.correct) + '</span></div>';
+    }).join("");
+    spl.classList.remove("hidden");
   }
   show("sSum"); window.scrollTo(0,0);
   if (pass) FX.play({ big: true }, function(){});
@@ -575,9 +627,9 @@ function stay(){ closeLeave(); if (S.phase === "prompt") $(S.lastBox || "sname")
 function goHome(){
   FX.cancel(); closeLeave();
   S.phase = "start"; S.order = []; S.i = 0; S.results = []; S.hints = 0; S.hintUsed = false; S.lastBox = null;
-  ["sname", "cap", "abbr"].forEach(function(id){ var el = $(id); el.value = ""; el.disabled = false; el.classList.remove("good", "bad"); });
+  ["sname", "cap", "abbr"].forEach(function(id){ var el = $(id); el.value = ""; el.disabled = false; el.classList.remove("good", "bad", "near"); });
   $("fb").className = "fb hidden"; $("hint").classList.add("hidden"); $("playCard").classList.remove("wiggle");
-  $("hprog").classList.add("hidden"); $("barFill").style.width = "0%"; $("misses").innerHTML = "";
+  $("hprog").classList.add("hidden"); $("barFill").style.width = "0%"; $("misses").innerHTML = ""; $("spelling").innerHTML = ""; $("spelling").classList.add("hidden");
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   show("sStart"); window.scrollTo(0, 0);
 }
