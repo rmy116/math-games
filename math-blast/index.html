@@ -50,6 +50,8 @@ h2{font-size:19px;font-weight:900;color:var(--blue);margin:16px 0 10px}
 .mbtn{font-size:16px;padding:10px 4px;line-height:1.15}
 .mbtn b{display:block;font-size:26px}
 .mbtn[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue2)}
+.ranges{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tbtn:disabled{opacity:.35;cursor:default;box-shadow:0 4px 0 var(--line);transform:none}
 .tbtn:focus-visible,.mbtn:focus-visible{outline:4px solid var(--gold);outline-offset:2px}
 .btn{display:block;width:100%;border:0;border-radius:999px;font:inherit;font-size:22px;font-weight:900;letter-spacing:.3px;padding:15px;cursor:pointer;color:#fff;background:var(--red);box-shadow:0 5px 0 var(--red2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .08s}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--red2)}
@@ -112,7 +114,7 @@ h2{font-size:19px;font-weight:900;color:var(--blue);margin:16px 0 10px}
   .hrow{gap:7px}.hrow img{width:32px;height:32px}.htitle{font-size:18px}.hsub{font-size:12px}
   .timer{font-size:15px;padding:5px 9px}.timer svg{width:14px;height:14px}.mute{width:32px;height:32px}.mute svg{width:18px;height:18px}.hright{gap:5px}
   main{padding:12px 12px calc(20px + env(safe-area-inset-bottom))}.card{padding:14px;border-radius:24px}
-  h1{font-size:36px}.tables,.modes{gap:8px}.tbtn{font-size:22px;padding:9px 0}.mbtn{font-size:14px;padding:8px 2px}.mbtn b{font-size:22px}
+  h1{font-size:36px}.tables,.modes,.ranges{gap:8px}.tbtn{font-size:22px;padding:9px 0}.mbtn{font-size:14px;padding:8px 2px}.mbtn b{font-size:22px}
   .eq b{font-size:50px}#ans{font-size:30px}#go{padding:0 18px;font-size:21px}.rv-eq{font-size:40px}.big-time{font-size:50px}
 }
 @media (max-height:700px) and (max-width:699px){
@@ -147,6 +149,11 @@ h2{font-size:19px;font-weight:900;color:var(--blue);margin:16px 0 10px}
       <button class="mbtn" type="button" data-mode="mul" aria-pressed="false"><b>×</b>Multiply</button>
       <button class="mbtn" type="button" data-mode="div" aria-pressed="false"><b>÷</b>Divide</button>
       <button class="mbtn" type="button" data-mode="mixed" aria-pressed="true"><b>× ÷</b>Mixed</button>
+    </div>
+    <h2 id="lblRange">Which facts?</h2>
+    <div class="modes ranges" id="ranges" role="group" aria-labelledby="lblRange">
+      <button class="mbtn" type="button" data-range="10" aria-pressed="false"><b>1–10</b>No 11s or 12s</button>
+      <button class="mbtn" type="button" data-range="12" aria-pressed="true"><b>1–12</b>All facts</button>
     </div>
     <div class="go-wrap"><button class="btn" id="bStart" disabled>Pick a table</button></div>
     <div class="brand"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAADAFBMVEVHcEwhUcI6d+w7eO0hUsMrYNUhUsM0ads4ceM6d+0hU8QiUsQhU8QjU8E6d+wiU8Q7ee48ee4/e+8hUsMoV8U7d+06ee07ee4qR7hAgOYjVcc2YshMg+4hUsI5dek9evA3cuc3dOk9e/E3cuY5d+s3cuY3cub///8WFhw5dekiVMU4dOg7eO0hUsI2ceUgUcE3c+c3cuY1b+M8eu8vZ9ooXM40buI8ee4sYtUya98zbOAgUMAkV8gmWcolWMkqX9E5derg4OEjVcU4dOkjVcY6dus6d+smWssiU8M6d+w7d+whU8M7eOwkVsctZNcoXc8xat00beExadwhUsMuZtknW8w4c+c2ceQ3cuU2cOQ1cOQ7ee4hUcEiVMQ5duo6duoiU8QuZdgrYNIrYdM9eu8waNsfUMA1b+ItY9YpXtA9e/AfT78mWcslWMooXc77+voyat0iU8IgTrbNzc4kVsbQ0NI0buEwaNozbeAwadwnW83z8/Pw8PFKarNMg+wsY9UtLTLf3+Dl5ea5ubp4nuwsYdNIfeYpXs+Dg4YqYNKIiIs1YcY4ZcqxsbPk5OVzc3ckJCmbm54uZdc7atBPhvD5+vo5Z80nJyxwcHNbW2D4+PhbhdtUVFlAcNdEd99LgelHeuI9btWioqT9/f4gICVukdodHSMrKzFCc9svLzVWfdHn7PhVesqYmJsjU7tvlOBGRktMgOg/P0UZGR8pW8NKf+hoi9XFxcY3Y8p4eHsVFRz8/Pzz9v0pXszg5/Vlhs9OhvBfiuAmWMAoVrcmWcbb29yDnNLq6uqXrNnv8/tiYmZEeeNmiNJRftolUK90muYrYdJqam6dteY/ZrnX3/G9vb+rq623y/Syx/MpXMc2Nju1tbdNTVKwsLJej+w2bNirwe1XV1skVcBmg8IjUbTJyco7O0HP2e1Fc9WMpdlSUlbPz9DI0eZxcXWEhIfX19jt8fg/duM3Ybt8fIGSkpT/453/2HRFb8je3t//78j/8MtzYLo7fADvAEkAHpRHcEzmID7VAAABAHRSTlMAS476+hzMESm18bTjMViLSfHOclxyNugGBvy1jpj44NrL1Obe8+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AS++S7QAACLxJREFUeNrtm3lYFOcZwD9uuSSAd+702G1N0xBNWpMINUdJW2OOJtGkJWmUNNEmHBpzQdFKwQ2RgMFVWCBBl0NcWFd3E0v3oLDLtQa5T7lFUOOVs8dfnR1nd2bn+2Z2xhlmn6dPf3/A++6+M+9v55ud69kPAARB832D71gcuUU0Im+N8l24CHAjYGFUYuKWRJFZga3xVt95ntsvCk5cMXckBt/A3n5e8Iq5ZcuKYJatsNTXb9++nxHMWeR301Kmjx+Flf3DtcBcRYn7ogKQ/W+I/J1EbFmM+kLM97tTOvzgfXH+nZLiN5++/f3WSgttG8yL/LXURFK/jkujfiU93w8iBXx/6Q2CyQHwe9QLvPSoa0cMzsh4iUDSaDExCItezMh4kUDa6CZiA/zCW9yCH5MDfuQ9fB0CC70ocItjL7j9Yf5kjI1lPCwCyxdi13/L+TI2aJIlJ8tMA2PLBXM7dhbiucjaQbVShqM0DmQLNggCvs/x4lOLSuZCpcl4TiDzQfDdfFhrUcooKDXZdwvDF9yG/f3kE2fuKZpQydxQDXBfFhkFg+/FxMQc+zSGwEM0ppbRMHZwXRYd3QZ+EMODCSVdIHkgRhA/BBt4sF4jgzCt3yAIcBcPvpQhOHaXIPgIbDiG6J/cIFBgPQ/akQLrBQGe50EpagjKnhcEeIEH46idcPwFQYB7eLCqW0Xvr5xIuUcQuEB2tjNlj8qKjXQB9Wdl3JZlisCrGNnZrxJ4iM7RN4Fq4hzXZRkicB8fUvb3up+MLAUp9wkDKfBlx18Z6Gg2UUZBrTzPXHmSo8BbMBs0LWuYaEmjboE05sJdV0++xQXwFEyDSi9nZGb0hItcHXOdfNfRp7gA3oFpSJN/SPmYezOpo76T2mTnLspb2w64Cfzl6DtcYBJQffcfiQTuh8G3wLf/FixwPxcQAikOgeTvvpVQoKzMmeKRWPsA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" alt="">Turk's Puzzles</div>
@@ -204,21 +211,26 @@ h2{font-size:19px;font-weight:900;color:var(--blue);margin:16px 0 10px}
 /*CORE-START*/
 var TOTAL = 20;
 var MODES = { mul: "Multiplication", div: "Division", mixed: "Mixed" };
+// Facts range: 12 = every fact up to x12 (the original game), 10 = no 11s or 12s.
+var RANGES = { 10: "1\u201310", 12: "1\u201312" };
+function normRange(r) { return +r === 10 ? 10 : 12; }
 function shuffle(a, rng) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 function range(a, b) { var r = []; for (var i = a; i <= b; i++) r.push(i); return r; }
-// 20 facts for one table. n runs 1..12: every n at least once, none more than twice,
+// 20 facts for one table. n runs 1..max (max 12 or 10): every n at least once, none more than twice,
 // never the same n back to back. Division is always (table*n) / table = n (whole numbers, table >= 1).
 function makeItem(table, op, n, flip) {
   if (op === "mul") { var a = flip ? n : table, b = flip ? table : n; return { op: "mul", a: a, b: b, n: n, ans: table * n, text: a + " \u00d7 " + b }; }
   return { op: "div", a: table * n, b: table, n: n, ans: n, text: (table * n) + " \u00f7 " + table };
 }
-function genQuestions(table, mode, rng) {
+function genQuestions(table, mode, rng, max) {
   rng = rng || Math.random;
+  max = max == null ? 12 : +max;
+  if (!RANGES[max]) throw new Error("range must be 10 or 12");
   table = Math.floor(+table);
-  if (!(table >= 1 && table <= 12)) throw new Error("table must be 1..12");
+  if (!(table >= 1 && table <= max)) throw new Error("table must be 1.." + max);
   if (!MODES[mode]) throw new Error("bad mode");
   for (var tries = 0; tries < 2000; tries++) {
-    var ns = range(1, 12).concat(shuffle(range(1, 12), rng).slice(0, TOTAL - 12));
+    var ns = range(1, max).concat(shuffle(range(1, max), rng).slice(0, TOTAL - max));
     var ops = [];
     for (var k = 0; k < TOTAL; k++) ops.push(mode === "mixed" ? (k < TOTAL / 2 ? "mul" : "div") : mode);
     shuffle(ns, rng); shuffle(ops, rng);
@@ -234,8 +246,9 @@ function parseAnswer(s) { s = String(s == null ? "" : s).trim(); return /^\d{1,4
 function grade(item, typed) { var v = parseAnswer(typed); return v !== null && v === item.ans; }
 function fmtTime(ms) { ms = Math.max(0, ms || 0); var s = Math.floor(ms / 1000); return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
 // One round: questions, answers, timer, review queue. Clock passed in so tests can drive it.
-function Game(table, mode, rng) {
-  this.table = table; this.mode = mode; this.items = genQuestions(table, mode, rng);
+function Game(table, mode, rng, max) {
+  this.max = max == null ? 12 : +max;
+  this.table = table; this.mode = mode; this.items = genQuestions(table, mode, rng, this.max);
   this.i = 0; this.results = []; this.t0 = null; this.t1 = null; this.reviewIdx = 0;
 }
 Game.prototype.start = function (now) { if (this.t0 === null) this.t0 = now; };
@@ -257,9 +270,10 @@ Game.prototype.reviewCurrent = function () { return this.wrongList()[this.review
 Game.prototype.reviewNext = function () { if (this.reviewIdx < this.wrongList().length) this.reviewIdx++; return this.reviewCurrent(); };
 Game.prototype.reviewDone = function () { return this.reviewIdx >= this.wrongList().length; };
 // Best times only count perfect rounds, so rushing wrong answers can't set a record.
-function bestKey(table, mode) { return "mathblast-best-" + table + "-" + mode; }
+// 1-12 keeps the original key so existing best times carry over; 1-10 has its own key.
+function bestKey(table, mode, max) { return "mathblast-best-" + table + "-" + mode + (+max === 10 ? "-to10" : ""); }
 function isNewBest(prevMs, ms, right) { return right === TOTAL && (prevMs == null || !(prevMs > 0) || ms < prevMs); }
-var core = { TOTAL: TOTAL, MODES: MODES, genQuestions: genQuestions, parseAnswer: parseAnswer, grade: grade, fmtTime: fmtTime, Game: Game, bestKey: bestKey, isNewBest: isNewBest };
+var core = { TOTAL: TOTAL, MODES: MODES, RANGES: RANGES, normRange: normRange, genQuestions: genQuestions, parseAnswer: parseAnswer, grade: grade, fmtTime: fmtTime, Game: Game, bestKey: bestKey, isNewBest: isNewBest };
 /*CORE-END*/
 var $ = function(id){ return document.getElementById(id); };
 var reduceMQ = window.matchMedia ? matchMedia("(prefers-reduced-motion: reduce)") : null;
@@ -397,20 +411,24 @@ var MINI = (function(){
 
 /* ---------- game ---------- */
 var RIGHT_MS = 420, WRONG_MS = 600; // quick flash, then the next question
-var setup = { table: null, mode: "mixed" };
+var setup = { table: null, mode: "mixed", max: 12 };
 var lastT = parseInt(store("mathblast-table"), 10), lastM = store("mathblast-mode");
-if (lastT >= 1 && lastT <= 12) setup.table = lastT;
+setup.max = normRange(store("mathblast-range"));
+if (lastT >= 1 && lastT <= setup.max) setup.table = lastT;
 if (lastM && MODES[lastM]) setup.mode = lastM;
 var G = null, phase = "setup", tick = 0, lock = false, endInfo = null;
 var tables = $("tables");
 for (var t = 1; t <= 12; t++) { var b = document.createElement("button"); b.type = "button"; b.className = "tbtn"; b.dataset.t = t; b.innerHTML = t + "<small>s</small>"; b.setAttribute("aria-label", t + "s table"); tables.appendChild(b); }
 function paintSetup(){
-  Array.prototype.forEach.call(tables.children, function(b){ b.setAttribute("aria-pressed", +b.dataset.t === setup.table ? "true" : "false"); });
+  Array.prototype.forEach.call(tables.children, function(b){ b.setAttribute("aria-pressed", +b.dataset.t === setup.table ? "true" : "false"); b.disabled = +b.dataset.t > setup.max; });
+  Array.prototype.forEach.call($("ranges").children, function(b){ b.setAttribute("aria-pressed", +b.dataset.range === setup.max ? "true" : "false"); });
   Array.prototype.forEach.call($("modes").children, function(b){ b.setAttribute("aria-pressed", b.dataset.mode === setup.mode ? "true" : "false"); });
   var s = $("bStart"); s.disabled = !setup.table; s.textContent = setup.table ? "Start the " + setup.table + "s!" : "Pick a table";
 }
 tables.addEventListener("click", function(e){ var b = e.target.closest(".tbtn"); if (!b) return; setup.table = +b.dataset.t; paintSetup(); });
 $("modes").addEventListener("click", function(e){ var b = e.target.closest(".mbtn"); if (!b) return; setup.mode = b.dataset.mode; paintSetup(); });
+// 1-10 turns off the 11s and 12s; if one of those was picked, nothing is selected until a new table is tapped.
+$("ranges").addEventListener("click", function(e){ var b = e.target.closest(".mbtn"); if (!b) return; setup.max = normRange(b.dataset.range); if (setup.table > setup.max) setup.table = null; store("mathblast-range", String(setup.max)); paintSetup(); });
 paintSetup();
 function show(id){ ["sSetup","sPlay","sSum","sReview","sEnd"].forEach(function(s){ $(s).classList.toggle("hidden", s !== id); }); window.scrollTo(0, 0); }
 function what(){ return setup.table + "s \u00b7 " + MODES[setup.mode]; }
@@ -419,8 +437,8 @@ function paintTime(){ if (G) $("tval").textContent = fmtTime(G.elapsed(Date.now(
 function startGame(){
   if (!setup.table) return;
   SND.unlock(); FX.skip();
-  store("mathblast-table", String(setup.table)); store("mathblast-mode", setup.mode);
-  G = new Game(setup.table, setup.mode); lock = false;
+  store("mathblast-table", String(setup.table)); store("mathblast-mode", setup.mode); store("mathblast-range", String(setup.max));
+  G = new Game(setup.table, setup.mode, null, setup.max); lock = false;
   $("hsub").textContent = what();
   show("sPlay"); setTimer(true);
   G.start(Date.now()); paintTime(); clearInterval(tick); tick = setInterval(paintTime, 250);
@@ -459,7 +477,7 @@ function submit(){
 function finish(){
   phase = "summary"; setTimer(true);
   var ms = G.elapsed(Date.now()), right = G.right(), wrong = G.items.length - right;
-  var key = bestKey(G.table, G.mode), prev = parseInt(store(key), 10); prev = prev > 0 ? prev : null;
+  var key = bestKey(G.table, G.mode, G.max), prev = parseInt(store(key), 10); prev = prev > 0 ? prev : null;
   var nb = isNewBest(prev, ms, right); if (nb) store(key, String(ms));
   endInfo = { ms: ms, right: right, wrong: wrong, newBest: nb, best: nb ? ms : prev };
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
@@ -482,11 +500,11 @@ function reviewNext(){ if (phase !== "review") return; G.reviewNext(); if (G.rev
 function endScreen(){
   phase = "end"; var e = endInfo, perfect = e.wrong === 0;
   $("endTitle").textContent = perfect ? "Perfect 20/20!" : "All done!";
-  $("endWhat").textContent = what();
+  $("endWhat").textContent = what() + " \u00b7 Facts " + RANGES[G.max];
   $("endTime").textContent = fmtTime(e.ms);
   $("endRight").textContent = e.right + " right"; $("endWrong").textContent = e.wrong + " wrong"; $("endWrong").classList.toggle("hidden", perfect);
   $("endNewBest").classList.toggle("hidden", !e.newBest);
-  $("endBest").textContent = e.newBest ? "" : (e.best ? "Best time (20/20): " + fmtTime(e.best) : "Get 20/20 to set a best time!");
+  $("endBest").textContent = e.newBest ? "" : (e.best ? "Best time for " + RANGES[G.max] + " (20/20): " + fmtTime(e.best) : "Get 20/20 to set a best time for " + RANGES[G.max] + "!");
   show("sEnd"); $("bAgain").focus();
   if (perfect) FX.play({ big: true }, function(){});
 }
