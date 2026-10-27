@@ -47,6 +47,20 @@ main{max-width:620px;margin:0 auto;padding:16px 16px calc(24px + env(safe-area-i
 .rules li{padding-left:32px;position:relative;margin:8px 0}
 .rules li::before{content:"★";position:absolute;left:4px;top:-1px;font-size:20px;color:var(--red)}
 .rules li:nth-child(even)::before{color:var(--sky)}
+.btn.soft{background:#fff;color:var(--blue);box-shadow:0 5px 0 var(--line);border:3px solid var(--line);padding:12px 15px;font-size:20px;margin-top:14px}
+.btn.soft:active{box-shadow:0 1px 0 var(--line)}
+.btn.soft .ic{display:inline-block;margin-right:8px}
+.study h2{text-align:center;font-size:30px;font-weight:900;color:var(--blue);margin:2px 0 4px;letter-spacing:-.2px}
+.study .ssub{text-align:center;color:var(--muted);font-weight:800;font-size:16px;margin:0 0 14px}
+.slist{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:10px}
+.sitem{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;background:#f5f8ff;border:3px solid var(--line);border-radius:20px;padding:10px 12px}
+.sitem .sn{min-width:48px;height:48px;border-radius:14px;background:var(--blue);color:#fff;font-size:24px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--blue2);padding:0 6px}
+.sitem .st{font-size:21px;font-weight:900;color:var(--ink);line-height:1.15;overflow-wrap:anywhere}
+.sitem .sc{font-size:17px;font-weight:700;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}.sitem .sc b{color:var(--red);font-weight:900}
+.sitem .sa{font-size:20px;font-weight:900;color:#fff;background:var(--red);border-radius:12px;padding:6px 10px;box-shadow:0 3px 0 var(--red2);letter-spacing:1px}
+.sback{display:inline-flex;align-items:center;gap:6px;border:0;background:none;font:inherit;font-size:17px;font-weight:900;color:var(--blue);padding:8px 6px;margin:-6px 0 4px -4px;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent}
+.sback:focus-visible{outline:4px solid var(--gold)}
+.study .btn.soft{margin-top:12px}
 .brand{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;color:var(--muted);font-weight:800;font-size:14px}
 .brand img{width:28px;height:28px}
 /* buttons */
@@ -128,6 +142,7 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
   .num b{font-size:62px}.num small{font-size:11px}.num::before,.num i{font-size:18px}label{font-size:15px;margin-bottom:3px}.field{margin-bottom:9px}
   .btn{padding:12px;font-size:20px}.bar{margin-bottom:9px;height:10px}.start{padding:16px 14px}.rules{margin:10px auto 14px;font-size:16px}.rules li{margin:5px 0}
   .fb{padding:9px 12px;margin-bottom:12px}.fb .big{font-size:21px}
+  .btn.soft{padding:9px 12px;font-size:18px;margin-top:10px}.start .brand{margin-top:14px}.sitem{padding:8px 10px;gap:10px}.sitem .sn{min-width:42px;height:42px;font-size:21px}.sitem .st{font-size:19px}.sitem .sc{font-size:16px}.sitem .sa{font-size:18px;padding:5px 8px}
 }
 @media (prefers-reduced-motion:reduce){.wiggle,.fb.pop{animation:none}.btn,.bar i{transition:none}}
 </style>
@@ -158,7 +173,17 @@ input:disabled{opacity:1;-webkit-text-fill-color:var(--ink)}
       <li>Get all 10 right to pass!</li>
     </ul>
     <button class="btn" id="bStart">Let's go!</button>
+    <button class="btn soft" type="button" id="bStudy"><span class="ic" aria-hidden="true">📖</span>Study the answers</button>
     <div class="brand"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAADAFBMVEVHcEwhUcI6d+w7eO0hUsMrYNUhUsM0ads4ceM6d+0hU8QiUsQhU8QjU8E6d+wiU8Q7ee48ee4/e+8hUsMoV8U7d+06ee07ee4qR7hAgOYjVcc2YshMg+4hUsI5dek9evA3cuc3dOk9e/E3cuY5d+s3cuY3cub///8WFhw5dekiVMU4dOg7eO0hUsI2ceUgUcE3c+c3cuY1b+M8eu8vZ9ooXM40buI8ee4sYtUya98zbOAgUMAkV8gmWcolWMkqX9E5derg4OEjVcU4dOkjVcY6dus6d+smWssiU8M6d+w7d+whU8M7eOwkVsctZNcoXc8xat00beExadwhUsMuZtknW8w4c+c2ceQ3cuU2cOQ1cOQ7ee4hUcEiVMQ5duo6duoiU8QuZdgrYNIrYdM9eu8waNsfUMA1b+ItY9YpXtA9e/AfT78mWcslWMooXc77+voyat0iU8IgTrbNzc4kVsbQ0NI0buEwaNozbeAwadwnW83z8/Pw8PFKarNMg+wsY9UtLTLf3+Dl5ea5ubp4nuwsYdNIfeYpXs+Dg4YqYNKIiIs1YcY4ZcqxsbPk5OVzc3ckJCmbm54uZdc7atBPhvD5+vo5Z80nJyxwcHNbW2D4+PhbhdtUVFlAcNdEd99LgelHeuI9btWioqT9/f4gICVukdodHSMrKzFCc9svLzVWfdHn7PhVesqYmJsjU7tvlOBGRktMgOg/P0UZGR8pW8NKf+hoi9XFxcY3Y8p4eHsVFRz8/Pzz9v0pXszg5/Vlhs9OhvBfiuAmWMAoVrcmWcbb29yDnNLq6uqXrNnv8/tiYmZEeeNmiNJRftolUK90muYrYdJqam6dteY/ZrnX3/G9vb+rq623y/Syx/MpXMc2Nju1tbdNTVKwsLJej+w2bNirwe1XV1skVcBmg8IjUbTJyco7O0HP2e1Fc9WMpdlSUlbPz9DI0eZxcXWEhIfX19jt8fg/duM3Ybt8fIGSkpT/453/2HRFb8je3t//78j/8MtzYLo7fADvAEkAHpRHcEzmID7VAAABAHRSTlMAS476+hzMESm18bTjMViLSfHOclxyNugGBvy1jpj44NrL1Obe8+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8AS++S7QAACLxJREFUeNrtm3lYFOcZwD9uuSSAd+702G1N0xBNWpMINUdJW2OOJtGkJWmUNNEmHBpzQdFKwQ2RgMFVWCBBl0NcWFd3E0v3oLDLtQa5T7lFUOOVs8dfnR1nd2bn+2Z2xhlmn6dPf3/A++6+M+9v55ud69kPAARB832D71gcuUU0Im+N8l24CHAjYGFUYuKWRJFZga3xVt95ntsvCk5cMXckBt/A3n5e8Iq5ZcuKYJatsNTXb9++nxHMWeR301Kmjx+Flf3DtcBcRYn7ogKQ/W+I/J1EbFmM+kLM97tTOvzgfXH+nZLiN5++/f3WSgttG8yL/LXURFK/jkujfiU93w8iBXx/6Q2CyQHwe9QLvPSoa0cMzsh4iUDSaDExCItezMh4kUDa6CZiA/zCW9yCH5MDfuQ9fB0CC70ocItjL7j9Yf5kjI1lPCwCyxdi13/L+TI2aJIlJ8tMA2PLBXM7dhbiucjaQbVShqM0DmQLNggCvs/x4lOLSuZCpcl4TiDzQfDdfFhrUcooKDXZdwvDF9yG/f3kE2fuKZpQydxQDXBfFhkFg+/FxMQc+zSGwEM0ppbRMHZwXRYd3QZ+EMODCSVdIHkgRhA/BBt4sF4jgzCt3yAIcBcPvpQhOHaXIPgIbDiG6J/cIFBgPQ/akQLrBQGe50EpagjKnhcEeIEH46idcPwFQYB7eLCqW0Xvr5xIuUcQuEB2tjNlj8qKjXQB9Wdl3JZlisCrGNnZrxJ4iM7RN4Fq4hzXZRkicB8fUvb3up+MLAUp9wkDKfBlx18Z6Gg2UUZBrTzPXHmSo8BbMBs0LWuYaEmjboE05sJdV0++xQXwFEyDSi9nZGb0hItcHXOdfNfRp7gA3oFpSJN/SPmYezOpo76T2mTnLspb2w64Cfzl6DtcYBJQffcfiQTuh8G3wLf/FixwPxcQAikOgeTvvpVQoKzMmeKRWPsA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" alt="">Turk's Puzzles</div>
+  </section>
+
+  <section class="card study hidden" id="sStudy" aria-labelledby="studyTitle">
+    <button class="sback" type="button" id="bStudyBack" aria-label="Back to start">&larr; Back</button>
+    <h2 id="studyTitle">Study the answers</h2>
+    <p class="ssub" id="studySub">Quiz</p>
+    <ol class="slist" id="studyList"></ol>
+    <button class="btn" type="button" id="bStudyStart">Let's go!</button>
+    <button class="btn soft" type="button" id="bStudyBack2">Back to start</button>
   </section>
 
   <section class="hidden" id="sPlay">
@@ -257,6 +282,12 @@ function hintLetter(st, field) {
   if (v == null) throw new Error("bad field");
   return v.charAt(0);
 }
+// Study list: every item of a quiz with its answers, in number order.
+function studyList(q) {
+  return q.states.slice().sort(function (a, b) { return a - b; }).map(function (n) {
+    var st = stateByNum(n); return { n: st.n, name: st.name, capital: st.capital, abbr: st.abbr };
+  });
+}
 function grade(st, name, cap, abbr) {
   var nameOk = norm(name) !== "" && norm(name) === norm(st.name);
   var capOk = norm(cap) !== "" && norm(cap) === norm(st.capital);
@@ -264,7 +295,7 @@ function grade(st, name, cap, abbr) {
   return { nameOk: nameOk, capOk: capOk, abbrOk: abOk, ok: nameOk && capOk && abOk };
 }
 var core = { STATES: STATES, QUIZZES: QUIZZES, cutoff: cutoff, quizLabel: quizLabel, activeQuiz: activeQuiz,
-  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade, hintLetter: hintLetter };
+  parseDateParam: parseDateParam, stateByNum: stateByNum, buildOrder: buildOrder, norm: norm, grade: grade, hintLetter: hintLetter, studyList: studyList };
 /*CORE-END*/
 var $ = function(id){ return document.getElementById(id); };
 var now = parseDateParam(location.search) || new Date();
@@ -387,7 +418,7 @@ var FX = (function(){
 })();
 
 var CHEERS = ["Awesome!", "You got it!", "Star power!", "Nailed it!", "Way to go!", "Super job!"];
-function show(id){ ["sStart","sPlay","sSum"].forEach(function(s){ $(s).classList.toggle("hidden", s !== id); }); }
+function show(id){ ["sStart","sStudy","sPlay","sSum"].forEach(function(s){ $(s).classList.toggle("hidden", s !== id); }); }
 function start(){
   SND.unlock(); FX.skip();
   S.order = buildOrder(Q.states); S.i = 0; S.results = []; S.hints = 0;
@@ -490,6 +521,22 @@ function useHint(){
 $("bHint").addEventListener("pointerdown", function(e){ e.preventDefault(); });
 $("bHint").addEventListener("mousedown", function(e){ e.preventDefault(); });
 $("bHint").addEventListener("click", useHint);
+/* ---------- study view (start screen only) ---------- */
+$("studySub").textContent = label + " \u00b7 States " + Q.states[0] + "\u2013" + Q.states[4];
+studyList(Q).forEach(function(it){
+  var li = document.createElement("li"); li.className = "sitem";
+  li.innerHTML = '<div class="sn"></div><div><div class="st"></div><div class="sc">Capital: <b></b></div></div><div class="sa"></div>';
+  li.querySelector(".sn").textContent = it.n; li.querySelector(".st").textContent = it.name;
+  li.querySelector(".sc b").textContent = it.capital; li.querySelector(".sa").textContent = it.abbr;
+  li.querySelector(".sa").setAttribute("aria-label", "Abbreviation " + it.abbr.split("").join(" "));
+  $("studyList").appendChild(li);
+});
+function openStudy(){ if (S.phase !== "start") return; S.phase = "study"; show("sStudy"); window.scrollTo(0,0); $("bStudyBack").focus({ preventScroll: true }); }
+function closeStudy(){ if (S.phase !== "study") return; S.phase = "start"; show("sStart"); window.scrollTo(0,0); $("bStudy").focus({ preventScroll: true }); }
+$("bStudy").addEventListener("click", openStudy);
+$("bStudyBack").addEventListener("click", closeStudy);
+$("bStudyBack2").addEventListener("click", closeStudy);
+$("bStudyStart").addEventListener("click", function(){ if (S.phase === "study") start(); });
 $("bStart").addEventListener("click", start);
 $("bAgain").addEventListener("click", start);
 $("bNext").addEventListener("click", next);
@@ -506,7 +553,7 @@ document.addEventListener("keydown", function(e){
   if (S.phase === "prompt" && t === $("abbr")) { e.preventDefault(); check(); return; }
   if (S.phase === "feedback") { e.preventDefault(); next(); return; }
 });
-window.StatesQuiz = { core: core, state: S, hint: useHint, quiz: Q, finished: act.finished, now: now, start: start, fx: FX, sound: SND };
+window.StatesQuiz = { core: core, state: S, hint: useHint, study: openStudy, quiz: Q, finished: act.finished, now: now, start: start, fx: FX, sound: SND };
 })();
 </script>
 </body>
