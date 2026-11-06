@@ -284,7 +284,8 @@ var STATES = [
  [46,"Oregon","Salem","OR"],[47,"Nevada","Carson City","NV"],[48,"California","Sacramento","CA"],[49,"Alaska","Juneau","AK"],[50,"Hawaii","Honolulu","HI"]
 ].map(function (r) { return { n: r[0], name: r[1], capital: r[2], abbr: r[3] }; });
 
-// Quiz dates from the class schedule. Cutoff = 11:00 AM device-local time on the quiz day.
+// Quiz dates from the class schedule. Each quiz stays up until 3:00 PM Pacific
+// (America/Los_Angeles, daylight saving included) on its date, then the next one starts.
 // No quiz Fri Nov 27 (Thanksgiving week).
 var QUIZZES = [
  [1,2026,10,8],[2,2026,10,16],[3,2026,10,23],[4,2026,10,30],[5,2026,11,6],
@@ -295,8 +296,29 @@ var QUIZZES = [
 });
 var DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function cutoff(q) { return new Date(q.y, q.m - 1, q.d, 11, 0, 0, 0); }
-function quizLabel(q) { var c = cutoff(q); return DOW[c.getDay()] + " " + MON[c.getMonth()] + " " + c.getDate(); }
+var PACIFIC = "America/Los_Angeles";
+// Wall-clock time in a named zone, as an absolute instant. Two passes so a DST gap or overlap settles.
+function zonedTime(y, m, d, h, mi, timeZone) {
+  var fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: timeZone, hourCycle: "h23",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit"
+  });
+  function wallAsUTC(ms) {
+    var map = {};
+    fmt.formatToParts(new Date(ms)).forEach(function (p) { if (p.type !== "literal") map[p.type] = p.value; });
+    var hour = +map.hour; if (hour === 24) hour = 0;
+    return Date.UTC(+map.year, +map.month - 1, +map.day, hour, +map.minute, +map.second);
+  }
+  var want = Date.UTC(y, m - 1, d, h, mi, 0), t = want, i;
+  for (i = 0; i < 2; i++) t = want - (wallAsUTC(t) - t);
+  return new Date(t);
+}
+function cutoff(q) { return zonedTime(q.y, q.m, q.d, 15, 0, PACIFIC); }
+function quizLabel(q) {
+  var c = new Date(Date.UTC(q.y, q.m - 1, q.d));
+  return DOW[c.getUTCDay()] + " " + MON[c.getUTCMonth()] + " " + c.getUTCDate();
+}
 function activeQuiz(now) {
   for (var i = 0; i < QUIZZES.length; i++) if (now.getTime() < cutoff(QUIZZES[i]).getTime()) return { quiz: QUIZZES[i], finished: false };
   return { quiz: QUIZZES[QUIZZES.length - 1], finished: true };
